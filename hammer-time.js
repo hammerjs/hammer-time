@@ -12,8 +12,7 @@
 
 // If there is native touch action bail the hammer has already dropped
 if ( document.documentElement.style[ "touch-action" ] !== undefined ) {
-
-	//return;
+	return;
 }
 
 //Check if a global Hammer object already exists
@@ -56,7 +55,7 @@ window.Hammer.time = {
 		//alert(!timeTouch || Date.now() - e.target.lastStart < 150)
 		// Check both if we should trigger fast click and the time to avoid a double trigger with
 		// native fast click
-		if (  this.hasTouchNone( e.target ) &&
+		if (  this.getTouchAction( e.target ) === "none" &&
 				( !timeTouch || Date.now() - e.target.lastStart < 125 ) ) {
 			if ( e.type === "touchend" ) {
 
@@ -125,7 +124,7 @@ window.Hammer.time = {
 		document.addEventListener( "mouseup", this.touchHandler.bind( this ), true );
 		if ( timeTouch ) {
 			document.addEventListener( "touchstart", function( e ) {
-				if ( this.hasTouchNone( e.target ) ) {
+				if ( this.getTouchAction( e.target ) === "none" ) {
 					e.target.lastStart = Date.now();
 				}
 			}.bind( this ) );
