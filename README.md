@@ -16,7 +16,7 @@ Unfourtanitly not all common browsers support touch action yet ( [caniuse](http:
 
 ### Advantages...
 
-*   Size Hammer-time is very very small only 380 bytes gzipped
+*   Size Hammer-time is very very small only 417 bytes gzipped
 *   Easy to use no special libraries or events to bind. Hammer-time just speeds up the native events so you can use your favorite event library like jQuery or just plain old `addEventListener`
 *   Based on real standards, Hammer-time is a polyfill so it is a complete noop on browsers which support native `touch-action`
 *   Avoids target mismatches between the `touchend` and `click` events
