@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+	<title>Hammer Time</title>
+	<link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'>
+	<style>
+	body {
+		font-family: 'Hammersmith One', sans-serif;
+		box-sizing: border-box;
+		padding: 1em;
+	}
+	body * {
+		box-sizing: inherit;
+	}
+	.hero {
+		width: 500px;
+		max-width: 98%;
+		box-shadow: 5px 5px 2px #666;
+		margin-left: auto;
+		margin-right: auto;
+		display: block;
+	}
+	.title {
+		font-size: 5em;
+		text-align: center;
+		text-shadow:
+			1px 1px 0 #fff,
+			-1px 1px 0 #fff,
+			-1px -1px 0 #fff,
+			1px -1px 0 #fff,
+			4px 4px 2px #ccc;
+		line-height: 1em;
+		letter-spacing: 2vw;
+	}
+	.title-2 {
+		font-size: 3em;
+		text-align: center;
+		text-shadow: 4px 4px 2px #ccc;
+		line-height: 1em;
+		letter-spacing: 1vw;
+		text-shadow:
+			1px 1px 0 #fff,
+			-1px 1px 0 #fff,
+			-1px -1px 0 #fff,
+			1px -1px 0 #fff,
+			4px 4px 2px #ccc;
+	}
+	.target-wrap {
+		width: 49.5%;
+		margin: 0;
+		padding: 0;
+		display: inline-block;
+		vertical-align: top;
+	}
+	.target {
+		width: 250px;
+		margin-left: auto;
+		margin-right: auto;
+		height: 225px;
+		border: 1px solid #666;
+		box-shadow: 5px 5px 3px #ccc;
+		padding: 1em;
+		vertical-align: top;
+	}
+	.hit-target {
+		width: 96%;
+		margin: auto;
+		height: 75px;
+		background: orange;
+		color: black;
+		text-align: center;
+		margin-top: 1em;
+	}
+	.hit-target:after {
+		position: relative;
+		top: calc( 37px - .5em );
+		content: "Target";
+	}
+	.click-gauge {
+		-webkit-appearance: none;
+		height: 2em;
+		width: 100%;
+		border-radius: 2px
+	}
+	.click-gauge[value]::-webkit-progress-bar {
+		box-shadow: inset -3px -3px 3px #ccc , inset 3px 3px 3px #ccc;
+		background-color: #fff;
+		border-radius: 2px;
+		overflow: hidden;
+	}
+	.click-gauge[value]::-webkit-progress-value {
+		box-shadow: 2px .5px 1px #333, inset 2px 2px 7px darkgreen, inset -2px -2px 7px darkgreen;
+		border-radius: 2px 0 0 2px;
+		position: relative;
+	}
+	.click-gauge.warning[value]::-webkit-progress-value {
+		background: orange;
+		box-shadow: 2px .5px 1px #333, inset 2px 2px 7px darkorange, inset -2px -2px 7px darkorange;
+	}
+	.click-gauge.failure[value]::-webkit-progress-value {
+		background: red;
+		box-shadow: 2px .5px 1px #333, inset 2px 2px 7px darkred, inset -2px -2px 7px darkred;
+	}
+	.output {
+		height: 30px;
+		width: 100%;
+		display: block;
+	}
+	.hammer-time {
+		background: url(http://s3.amazonaws.com/rapgenius/anigif_enhanced-buzz-10302-1375465808-15.gif);
+	}
+	.body-wrap {
+		width: 100%;
+		max-width: 1000px;
+		margin: auto;
+	}
+	.clicked {
+		color: white;
+		border: 1px solid #003eff;
+		background: #007fff;
+	}
+	@media ( max-width: 600px ) {
+		.target-wrap {
+			width: 100%;
+			margin-bottom: 2em;
+		}
+		.title {
+			font-size: 2em;
+		}
+		.title-2 {
+			font-size: 1em;
+			line-height: normal;
+		}
+	}
+
+	</style>
+	<script src="hammer-time.js"></script>
+	<script src="https://code.jquery.com/jquery-3.0.0-alpha1.js"></script>
+	<script>
+	$(function(){
+		var upEvent = window.PointerEvent ? "pointerup" : ( ( 'ontouchstart' in window ) || window.DocumentTouch && document instanceof DocumentTouch ) ? "touchend" : "mouseup";
+		$( ".hit-target" ).on( upEvent, function( e ) {
+			this.startTime = Date.now();
+			$( this ).closest( ".target" ).find( ".output" ).html( e.type + ": " + this.startTime + "<br>");
+		} );
+		$( ".hit-target" ).on( "click", function( e ) {
+			var now = Date.now();
+			var clickTime = now - this.startTime;
+			var target = $( this ).closest( ".target" );
+			var status = clickTime < 100 ? "" : clickTime < 300 ? "warning" : "failure"
+
+			target.find( ".click-gauge" )
+				.attr( "value", clickTime )
+				.removeClass( "failure success" )
+				.addClass( status );
+			target.find( ".click-time-output" ).text( clickTime + "ms" );
+			target.find( ".output" ).append( "click: " + now + "<br>");
+			$( this ).addClass( "clicked" );
+			setTimeout( function() {
+				$( this ).removeClass( "clicked" );
+			}.bind( this ), 1000 )
+
+		} );
+	});
+	</script>
+</head>
+<body>
+<div class="body-wrap">
+<h1 class="title">Hammer Time!</h1>
+<img class="hero" src="http://33.media.tumblr.com/85d64e2f846797ab471480cff3f33d4b/tumblr_mzms7yMfum1s75u1lo2_500.gif">
+<h2 class="title-2">On your click times!</h2>
+<h4>Response time on user actions is important</h4>
+
+<p>Keeping visual response to under 100ms means your users will not notice the delay. The UI will feel quick and responsive giving users the impression they are doing the work instead of the application. Try the boxes below to see the response time on mobile devices.</p>
+<p>The first box uses <code>touch-action:none;</code> to remove the 300ms delay. The second box has no <code>touch-action</code> property set. On touch screens you will see a noticeable difference in the response time of the background and in the outputing of the end vs click events.</p>
+
+	<div id="wrap">
+		<div class="target-wrap" id="target">
+			<div class="target">
+				<code>style="touch-action: none;"</code><br>
+				Click Time: <span class="click-time-output">0ms</span>
+				<progress class="click-gauge" min="0" max="500" value="0"></progress>
+				<span class="output"></span>
+				<div class="hit-target" style="touch-action: none;"></div>
+			</div>
+		</div>
+		<div class="target-wrap">
+			<div class="target">
+				<code>style=""</code><br>
+				Click Time: <span class="click-time-output">0ms</span>
+				<progress class="click-gauge" min="0" max="500" value="0"></progress>
+				<span class="output"></span>
+				<div class="hit-target"></div>
+			</div>
+		</div>
+	</div>
+<p>Unfourtanitly not all common browsers support touch action yet so hammer-time works by partially polyfills this property. The only supported value is <code>none</code> or <code>auto</code></p>
+
+<h3>Advantages...</h3>
+<ul>
+	<li>Size Hammer-time is very very small only xb</li>
+	<li>Easy to use no special libraries or events to bind. Hammer-time just speeds up the native events so you can use your favorite event library like jQuery or just plain old <code>addEventListener</code></li>
+	<li>Based on real standards, Hammer-time is a polyfill so it is a complete noop on browsers which support native <code>touch-action</code></li>
+	<li>Avoids target mismatches between the <code>touchend</code> and <code>click</code> events</li>
+</ul>
+<h3>Gotchas...</h3>
+<ul>
+	<li><b>Only works when applied directly to the style attribute on an element not to a stylesheet</b></li>
+	<li>Does not prevent scrolling or other behivors which happen on move or double tap zoom</li>
+	<li>You cannot set the touch-action property via `element.style[ touch-action ]` browsers that do not support touch action will ignore this</li>
+	<li>Removing the touch-action property from an existing element is not supported, Hammer-time has no way of knowing the difference between you removing the property and it being removed as a result or browser sanitization. Instead of removng the property completely simply change it to the default value of auto</li>
+	<li>Direct manipulation of the style property in a loop on elements with touch-action set from JavaScript ( JS animations for example ) should be avoided. Because of how browsers sanitize the style attribute when setting properties we use a mutation observe to restore the the touch action property when it is removed</li>
+</ul>
+
+<cite>To read more about UI response times and how this effects user experience see <a href="http://www.nngroup.com/articles/response-times-3-important-limits/">http://www.nngroup.com/articles/response-times-3-important-limits/</a></cite>
+</div>
+</body>
+</html>
