@@ -23,7 +23,8 @@ window.Hammer = window.Hammer || {};
 // it will trigger native fast click which cant ne stoped even with all the might
 // of thors hammer and a return false
 var MO = window.MutationObserver || window.WebKitMutationObserver;
-var styleMatch = /touch-action[:][\s]*none[^;'"]*/;
+var touchMatchNone = /touch-action[:][\s]*none[^;'"]*/;
+var touchMatch = /touch-action/;
 var iOS = ( navigator.userAgent.match( /(iPad|iPhone|iPod)/g ) ? true : false );
 var gl = ( function() {
 	try {
@@ -38,11 +39,17 @@ window.Hammer.time = {
 
 	// Checkes if an element has touch action none in its style attribute and thusly should
 	// be hammered upon
-	hasTouchNone: function( element ) {
-		return this.checkStyleString( element.getAttribute( "style" ) || "" );
+	getTouchAction: function( element ) {
+		return this.checkStyleString( element.getAttribute( "style" ) );
 	},
 	checkStyleString: function( style ) {
-		return styleMatch.test( style );
+		if ( !touchMatch.test( style ) ) {
+			return undefined;
+		}
+		if ( touchMatchNone.test( style ) ) {
+			return "none";
+		}
+		return true;
 	},
 	touchHandler: function( e ) {
 
@@ -75,7 +82,22 @@ window.Hammer.time = {
 		mutations.forEach( this.styleUpdater, this );
 	},
 	styleUpdater: function( mutation ) {
-			if ( !this.checkStyleString( mutation.target.getAttribute( "style" ) ) &&
+
+		// We just caused this update bail
+		if ( mutation.target.updateNext ) {
+			mutation.target.updateNext = false;
+			return;
+		}
+
+		var touchAction = this.getTouchAction( mutation.target );
+
+		if ( touchAction ) {
+			if ( touchAction !== "none" ) {
+				mutation.target.hadTouchNone = false;
+			}
+			return;
+		}
+		if ( !touchAction &&
 				(
 					( mutation.oldValue && this.checkStyleString( mutation.oldValue ) ) ||
 					mutation.target.hadTouchNone
@@ -86,6 +108,9 @@ window.Hammer.time = {
 			// style tag can update quicker then the mutation observer fires so we lose the oldValue
 			// property which contains our refrence to the original which contained touch-action.
 			mutation.target.hadTouchNone = true;
+
+			// Save the fact that we caused the next update
+			mutation.target.updateNext = false;
 
 			// Add touch action back to the style attribute
 			mutation.target
