@@ -11,10 +11,10 @@
 ( function() {
 
 // If there is native touch action bail the hammer has already dropped
-if ( document.documentElement.style[ "touch-action" ] !== undefined ) {
+if ( document.documentElement.style[ "touch-action" ] !== undefined ||
+		document.documentElement.style[ "-ms-touch-action" ] ) {
 	return;
 }
-
 //Check if a global Hammer object already exists
 window.Hammer = window.Hammer || {};
 

@@ -7,7 +7,7 @@
 	<link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'>
 	<link href="demo.css" rel="stylesheet" type="text/css">
 	<script src="hammer-time.js"></script>
-	<script src="https://code.jquery.com/jquery-3.0.0-alpha1.js"></script>
+	<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
 	<script>
 	$(function(){
 		var upEvent = window.PointerEvent ? "pointerup" : ( ( 'ontouchstart' in window ) || window.DocumentTouch && document instanceof DocumentTouch ) ? "touchend" : "mouseup";
@@ -62,7 +62,7 @@
 				Click Time: <span class="click-time-output">0ms</span>
 				<progress class="click-gauge" max="500" value="0"></progress>
 				<span class="output"></span>
-				<div class="hit-target"></div>
+				<div class="hit-target" style="touch-action: manipulation;"></div>
 			</div>
 		</div>
 	</div>
