@@ -22,7 +22,7 @@ window.Hammer = window.Hammer || {};
 // it will trigger native fast click which cant ne stoped even with all the might
 // of thors hammer and a return false
 var MO = window.MutationObserver || window.WebKitMutationObserver;
-var touchMatchNone = /touch-action[:][\s]*none[^;'"]*/;
+var touchMatchNone = /touch-action[:][\s]*(none|manipulation)[^;'"]*/;
 var touchMatch = /touch-action/;
 var iOS = ( navigator.userAgent.match( /(iPad|iPhone|iPod)/g ) ? true : false );
 var gl = ( function() {
