@@ -1,7 +1,7 @@
 {
   "name": "hammer-time",
   "description": "A fast click based on the touch-action css property",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": {
     "name": "Alex Schmitz",
     "url": "AUTHORS.txt"
