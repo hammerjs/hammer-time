@@ -28,5 +28,6 @@ Unfourtanitly not all common browsers support touch action yet ( [caniuse](http:
 *   You cannot set the touch-action property via `element.style[ touch-action ]` browsers that do not support touch action will ignore this
 *   Removing the touch-action property from an existing element is not supported, Hammer-time has no way of knowing the difference between you removing the property and it being removed as a result or browser sanitization. Instead of removng the property completely simply change it to the default value of auto
 *   Direct manipulation of the style property in a loop on elements with touch-action set from JavaScript ( JS animations for example ) should be avoided. Because of how browsers sanitize the style attribute when setting properties we use a mutation observe to restore the the touch action property when it is removed
+*	To properly support IE10 you need to add both `touch-action` and `-ms-touch-action`
 
 To read more about UI response times and how this effects user experience see [http://www.nngroup.com/articles/response-times-3-important-limits/](http://www.nngroup.com/articles/response-times-3-important-limits/)
