@@ -12,7 +12,7 @@ The first box uses `touch-action:none;` to remove the 300ms delay. The second bo
 
 The `touch-action` css property is part of the Pointer Events spec [http://www.w3.org/TR/pointerevents/#the-touch-action-css-property](http://www.w3.org/TR/pointerevents/#the-touch-action-css-property)
 
-Unfourtanitly not all common browsers support touch action yet ( [caniuse](http://caniuse.com/#feat=css-touch-action) ) so hammer-time works by partially polyfills this property. The only supported value is `none` or `auto`
+Unfourtanitly not all common browsers support touch action yet ( [caniuse](http://caniuse.com/#feat=css-touch-action) ) so hammer-time works by partially polyfills this property. The only supported value is `none`, `manipulation`, or `auto`
 
 ### Advantages...
 
