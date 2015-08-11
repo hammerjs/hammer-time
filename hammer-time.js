@@ -58,17 +58,10 @@ window.Hammer.time = {
 		if (  this.getTouchAction( e.target ) === "none" &&
 				( !timeTouch || Date.now() - e.target.lastStart < 125 ) ) {
 			if ( e.type === "touchend" ) {
-
-				// Create a new click event and dispatch it
-				var event = new MouseEvent( "click", {
-					"view": window,
-					"bubbles": true,
-					"cancelable": true
-				} );
-
+				e.target.focus();
 				// Wait for next tic so events fire in proper order
 				setTimeout( function() {
-					e.target.dispatchEvent( event );
+					e.target.click();
 				}, 0 );
 			}
 
