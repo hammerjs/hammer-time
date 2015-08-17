@@ -11,14 +11,14 @@
 	<script>
 	$(function(){
 		var upEvent = window.PointerEvent ? "pointerup" : ( ( 'ontouchstart' in window ) || window.DocumentTouch && document instanceof DocumentTouch ) ? "touchend" : "mouseup";
-		$( ".hit-target" ).on( upEvent, function( e ) {
+		$( ".target" ).on( upEvent, function( e ) {
 			this.startTime = Date.now();
-			$( this ).closest( ".target" ).find( ".output" ).html( e.type + ": " + this.startTime + "<br>");
+			$( this ).find( ".output" ).html( e.type + ": " + this.startTime + "<br>");
 		} );
-		$( ".hit-target" ).on( "click", function( e ) {
+		$( ".target" ).on( "click", function( e ) {
 			var now = Date.now();
 			var clickTime = now - this.startTime;
-			var target = $( this ).closest( ".target" );
+			var target = $( this );
 			var status = clickTime < 100 ? "" : clickTime < 300 ? "warning" : "failure"
 
 			target.find( ".click-gauge" )
@@ -48,12 +48,12 @@
 
 <div id="wrap">
 	<div class="target-wrap" id="target">
-		<div class="target">
+		<div class="target" style="touch-action: none;">
 			<code>style="touch-action: none;"</code><br>
 			Click Time: <span class="click-time-output">0ms</span>
 			<progress class="click-gauge" max="500" value="0"></progress>
 			<span class="output"></span>
-			<div class="hit-target" style="touch-action: none;"></div>
+			<div class="hit-target"></div>
 		</div>
 	</div>
 	<div class="target-wrap">

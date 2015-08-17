@@ -15,6 +15,7 @@ if ( document.documentElement.style[ "touch-action" ] !== undefined ||
 		document.documentElement.style[ "-ms-touch-action" ] ) {
 	return;
 }
+
 //Check if a global Hammer object already exists
 window.Hammer = window.Hammer || {};
 
@@ -52,13 +53,13 @@ window.Hammer.time = {
 	},
 	touchHandler: function( e ) {
 
-		//alert(!timeTouch || Date.now() - e.target.lastStart < 150)
 		// Check both if we should trigger fast click and the time to avoid a double trigger with
 		// native fast click
-		if (  this.getTouchAction( e.target ) === "none" &&
+		if (  this.hasParent( e.target ) &&
 				( !timeTouch || Date.now() - e.target.lastStart < 125 ) ) {
 			if ( e.type === "touchend" ) {
 				e.target.focus();
+
 				// Wait for next tic so events fire in proper order
 				setTimeout( function() {
 					e.target.click();
@@ -112,12 +113,20 @@ window.Hammer.time = {
 
 		}
 	},
+	hasParent: function( node ) {
+		for ( var cur = node; cur && cur.parentNode; cur = cur.parentNode ) {
+			if ( this.getTouchAction( cur )  === "none" ) {
+				return true;
+			}
+		}
+		return false;
+	},
 	install: function() {
 		document.addEventListener( "touchend", this.touchHandler.bind( this ), true );
 		document.addEventListener( "mouseup", this.touchHandler.bind( this ), true );
 		if ( timeTouch ) {
 			document.addEventListener( "touchstart", function( e ) {
-				if ( this.getTouchAction( e.target ) === "none" ) {
+				if ( this.hasParent( e.target ) ) {
 					e.target.lastStart = Date.now();
 				}
 			}.bind( this ) );
