@@ -114,9 +114,13 @@ window.Hammer.time = {
 		}
 	},
 	hasParent: function( node ) {
+		var touchAction;
 		for ( var cur = node; cur && cur.parentNode; cur = cur.parentNode ) {
-			if ( this.getTouchAction( cur )  === "none" ) {
+			touchAction = this.getTouchAction( cur );
+			if ( touchAction  === "none" ) {
 				return true;
+			} else if ( touchAction ) {
+				return false;
 			}
 		}
 		return false;
