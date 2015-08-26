@@ -23,7 +23,8 @@ window.Hammer = window.Hammer || {};
 // it will trigger native fast click which cant ne stoped even with all the might
 // of thors hammer and a return false
 var MO = window.MutationObserver || window.WebKitMutationObserver;
-var touchMatchNone = /touch-action[:][\s]*(none|manipulation)[^;'"]*/;
+var touchMatchNone = /touch-action[:][\s]*(none)[^;'"]*/;
+var touchMatchManipulation = /touch-action[:][\s]*(manipulation)[^;'"]*/;
 var touchMatch = /touch-action/;
 var iOS = ( navigator.userAgent.match( /(iPad|iPhone|iPod)/g ) ? true : false );
 var gl = ( function() {
@@ -49,14 +50,25 @@ window.Hammer.time = {
 		if ( touchMatchNone.test( style ) ) {
 			return "none";
 		}
+		if ( touchMatchManipulation.test( style ) ) {
+			return "manipulation";
+		}
 		return true;
 	},
+	shouldHammer: function( e ) {
+		var parentAction = this.hasParent( e.target );
+		return ( parentAction && ( !timeTouch || Date.now() - e.target.lastStart < 125 ) ) ?
+				parentAction : false;
+	},
 	touchHandler: function( e ) {
+		var pos = e.target.getBoundingClientRect();
+		var scrolled = pos.top !== this.pos.top || pos.left !== this.pos.left;
+		var hammerType = this.shouldHammer( e );
 
 		// Check both if we should trigger fast click and the time to avoid a double trigger with
 		// native fast click
-		if (  this.hasParent( e.target ) &&
-				( !timeTouch || Date.now() - e.target.lastStart < 125 ) ) {
+		if ( hammerType === "none" ||
+					( scrolled === false && hammerType === "manipulation" ) ) {
 			if ( e.type === "touchend" ) {
 				e.target.focus();
 
@@ -69,6 +81,7 @@ window.Hammer.time = {
 			// Prevent the click which will come after this otherwise but with a 300ms delay
 			e.preventDefault();
 		}
+		this.scrolled = false;
 		delete e.target.lastStart;
 	},
 	styleWatcher: function( mutations ) {
@@ -117,24 +130,25 @@ window.Hammer.time = {
 		var touchAction;
 		for ( var cur = node; cur && cur.parentNode; cur = cur.parentNode ) {
 			touchAction = this.getTouchAction( cur );
-			if ( touchAction  === "none" ) {
-				return true;
-			} else if ( touchAction ) {
-				return false;
+			if ( touchAction ) {
+				return touchAction;
 			}
 		}
 		return false;
 	},
-	install: function() {
+	installStartEvents: function() {
+		document.addEventListener( "touchstart", function( e ) {
+			this.pos = e.target.getBoundingClientRect();
+			if ( timeTouch && this.hasParent( e.target ) ) {
+				e.target.lastStart = Date.now();
+			}
+		}.bind( this ) );
+	},
+	installEndEvents: function() {
 		document.addEventListener( "touchend", this.touchHandler.bind( this ), true );
 		document.addEventListener( "mouseup", this.touchHandler.bind( this ), true );
-		if ( timeTouch ) {
-			document.addEventListener( "touchstart", function( e ) {
-				if ( this.hasParent( e.target ) ) {
-					e.target.lastStart = Date.now();
-				}
-			}.bind( this ) );
-		}
+	},
+	installObserver: function() {
 
 		// We need to observe changes to style attributes because if something updates the style
 		// attribute it will remove the touch-action property because browsers santitize the style
@@ -145,6 +159,12 @@ window.Hammer.time = {
 			attributeOldValue: true,
 			attributeFilter: [ "style" ]
 		} );
+	},
+	install: function() {
+		console.log( "install" );
+		this.installEndEvents();
+		this.installStartEvents();
+		this.installObserver();
 	}
 };
 
