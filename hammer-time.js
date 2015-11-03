@@ -161,7 +161,6 @@ window.Hammer.time = {
 		} );
 	},
 	install: function() {
-		console.log( "install" );
 		this.installEndEvents();
 		this.installStartEvents();
 		this.installObserver();
