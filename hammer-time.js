@@ -1,4 +1,4 @@
-/* Hammer-time - v0.0.0
+/* Hammer-time - v0.3.0
  * http://github.com/hammerjs/hammer-time
  *
  * Copyright Alexander Schmitz and other contributors
