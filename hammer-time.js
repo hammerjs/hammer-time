@@ -84,6 +84,12 @@ window.Hammer.time = {
 		this.scrolled = false;
 		delete e.target.lastStart;
 	},
+	touchStart: function( e ) {
+		this.pos = e.target.getBoundingClientRect();
+		if ( timeTouch && this.hasParent( e.target ) ) {
+			e.target.lastStart = Date.now();
+		}
+	},
 	styleWatcher: function( mutations ) {
 		mutations.forEach( this.styleUpdater, this );
 	},
@@ -137,12 +143,8 @@ window.Hammer.time = {
 		return false;
 	},
 	installStartEvents: function() {
-		document.addEventListener( "touchstart", function( e ) {
-			this.pos = e.target.getBoundingClientRect();
-			if ( timeTouch && this.hasParent( e.target ) ) {
-				e.target.lastStart = Date.now();
-			}
-		}.bind( this ) );
+		document.addEventListener( "touchstart", this.touchStart.bind( this ) );
+		document.addEventListener( "mousedown", this.touchStart.bind( this ) );
 	},
 	installEndEvents: function() {
 		document.addEventListener( "touchend", this.touchHandler.bind( this ), true );
