@@ -9,10 +9,15 @@
  */
 
 ( function() {
+	// Detect support for necessary features;
+	var MO = window.MutationObserver || window.WebKitMutationObserver;
+	var touchevents = ('ontouchstart' in window) ||
+	                  (window.DocumentTouch && document instanceof DocumentTouch);
+	var nativeTouchAction = document.documentElement.style[ "touch-action" ] !== undefined ||
+			                            document.documentElement.style[ "-ms-touch-action" ];
 
 // If there is native touch action bail the hammer has already dropped
-if ( document.documentElement.style[ "touch-action" ] !== undefined ||
-		document.documentElement.style[ "-ms-touch-action" ] ) {
+if ( nativeTouchAction || !touchevents || !MO ) {
 	return;
 }
 
@@ -22,7 +27,6 @@ window.Hammer = window.Hammer || {};
 // We need to save the last touch start in iOS 8 if it is more then 150ms
 // it will trigger native fast click which cant ne stoped even with all the might
 // of thors hammer and a return false
-var MO = window.MutationObserver || window.WebKitMutationObserver;
 var touchMatchNone = /touch-action[:][\s]*(none)[^;'"]*/;
 var touchMatchManipulation = /touch-action[:][\s]*(manipulation)[^;'"]*/;
 var touchMatch = /touch-action/;
