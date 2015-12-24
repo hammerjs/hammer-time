@@ -1,5 +1,6 @@
 {
-  "name": "hammer-time",
+  "name": "hammer-timejs",
+  "title": "Hammer Time",
   "description": "A fast click based on the touch-action css property",
   "version": "0.3.0",
   "author": {
