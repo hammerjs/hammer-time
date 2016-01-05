@@ -9,10 +9,11 @@
  */
 
 ( function() {
+
 	// Detect support for necessary features;
 	var MO = window.MutationObserver || window.WebKitMutationObserver;
-	var touchevents = ('ontouchstart' in window) ||
-	                  (window.DocumentTouch && document instanceof DocumentTouch);
+	var touchevents = ( "ontouchstart" in window ) ||
+	                  ( window.DocumentTouch && document instanceof DocumentTouch );
 	var nativeTouchAction = document.documentElement.style[ "touch-action" ] !== undefined ||
 			                            document.documentElement.style[ "-ms-touch-action" ];
 
