@@ -43,7 +43,7 @@ var timeTouch = gl && iOS;
 
 window.Hammer.time = {
 
-	// Checkes if an element has touch action none in its style attribute and thusly should
+	// Check if an element has touch action none in its style attribute and thusly should
 	// be hammered upon
 	getTouchAction: function( element ) {
 		return this.checkStyleString( element.getAttribute( "style" ) );
