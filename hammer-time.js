@@ -31,15 +31,7 @@ window.Hammer = window.Hammer || {};
 var touchMatchNone = /touch-action[:][\s]*(none)[^;'"]*/;
 var touchMatchManipulation = /touch-action[:][\s]*(manipulation)[^;'"]*/;
 var touchMatch = /touch-action/;
-var iOS = ( navigator.userAgent.match( /(iPad|iPhone|iPod)/g ) ? true : false );
-var gl = ( function() {
-	try {
-		var canvas = document.createElement( "canvas" );
-		return !!( window.WebGLRenderingContext && ( canvas.getContext( "webgl" ) ||
-			canvas.getContext( "experimental-webgl" ) ) );
-	}
-	catch ( e ) { return false; } } )();
-var timeTouch = gl && iOS;
+var timeTouch = /(iP(ad|hone|od))/.test( navigator.userAgent ) && ( "indexedDB" in window || !!window.performance );
 
 window.Hammer.time = {
 
