@@ -61,37 +61,43 @@ window.Hammer.time = {
 		return true;
 	},
 	shouldHammer: function( e ) {
-		var parentAction = this.hasParent( e.target );
+		var parentAction = e.target.hasParent;
 		return ( parentAction && ( !timeTouch || Date.now() - e.target.lastStart < 125 ) ) ?
 				parentAction : false;
 	},
 	touchHandler: function( e ) {
-		var pos = e.target.getBoundingClientRect();
-		var scrolled = pos.top !== this.pos.top || pos.left !== this.pos.left;
 		var hammerType = this.shouldHammer( e );
 
 		// Check both if we should trigger fast click and the time to avoid a double trigger with
 		// native fast click
-		if ( hammerType === "none" ||
-					( scrolled === false && hammerType === "manipulation" ) ) {
-			if ( e.type === "touchend" ) {
-				e.target.focus();
-
-				// Wait for next tic so events fire in proper order
-				setTimeout( function() {
-					e.target.click();
-				}, 0 );
-			}
-
-			// Prevent the click which will come after this otherwise but with a 300ms delay
-			e.preventDefault();
+		if ( hammerType === "none" ) {
+			this.dropHammer( e );
+		} else if ( hammerType === "manipulation" ) {
+			var pos = e.target.getBoundingClientRect();
+			var scrolled = pos.top !== this.pos.top || pos.left !== this.pos.left;
+			!scrolled && this.dropHammer( e );
 		}
 		this.scrolled = false;
 		delete e.target.lastStart;
+		delete e.target.hasParent;
+	},
+	dropHammer: function( e ) {
+		if ( e.type === "touchend" ) {
+			e.target.focus();
+
+			// Wait for next tic so events fire in proper order
+			setTimeout( function() {
+				e.target.click();
+			}, 0 );
+		}
+
+		// Prevent the click which will come after this otherwise but with a 300ms delay
+		e.preventDefault();
 	},
 	touchStart: function( e ) {
 		this.pos = e.target.getBoundingClientRect();
-		if ( timeTouch && this.hasParent( e.target ) ) {
+		e.target.hasParent = this.hasParent( e.target );
+		if ( timeTouch && e.target.hasParent ) {
 			e.target.lastStart = Date.now();
 		}
 	},
@@ -121,7 +127,7 @@ window.Hammer.time = {
 				)
 			) {
 
-			// We save this because durring animations which update the style in quick succession
+			// We save this because during animations which update the style in quick succession
 			// style tag can update quicker then the mutation observer fires so we lose the oldValue
 			// property which contains our refrence to the original which contained touch-action.
 			mutation.target.hadTouchNone = true;
