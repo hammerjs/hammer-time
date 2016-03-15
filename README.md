@@ -8,7 +8,7 @@
 
 Keeping visual response to under 100ms means your users will not notice the delay. The UI will feel quick and responsive giving users the impression they are doing the work instead of the application. Try the boxes below to see the response time on mobile devices.
 
-The first box uses `touch-action:none;` to remove the 300ms delay. The second box has no `touch-action` property set. On touch screens you will see a noticeable difference in the response time of the background and in the outputing of the end vs click events.
+The first box uses `touch-action:none;` to remove the 300ms delay. The second box has no `touch-action` property set. On touch screens you will see a noticeable difference in the response time of the background and in the outputting of the end vs click events.
 
 The `touch-action` css property is part of the Pointer Events spec [http://www.w3.org/TR/pointerevents/#the-touch-action-css-property](http://www.w3.org/TR/pointerevents/#the-touch-action-css-property)
 
@@ -24,9 +24,9 @@ Unfourtanitly not all common browsers support touch action yet ( [caniuse](http:
 ### Gotchas...
 
 *   **Only works when applied directly to the style attribute on an element not to a stylesheet**
-*   Does not prevent scrolling or other behivors which happen on move or double tap zoom
+*   Does not prevent scrolling or other behaviors which happen on move or double tap zoom
 *   You cannot set the touch-action property via `element.style[ touch-action ]` browsers that do not support touch action will ignore this
-*   Removing the touch-action property from an existing element is not supported, Hammer-time has no way of knowing the difference between you removing the property and it being removed as a result or browser sanitization. Instead of removng the property completely simply change it to the default value of auto
+*   Removing the touch-action property from an existing element is not supported, Hammer-time has no way of knowing the difference between you removing the property and it being removed as a result or browser sanitization. Instead of removing the property completely simply change it to the default value of auto
 *   Direct manipulation of the style property in a loop on elements with touch-action set from JavaScript ( JS animations for example ) should be avoided. Because of how browsers sanitize the style attribute when setting properties we use a mutation observe to restore the the touch action property when it is removed
 *	To properly support IE10 you need to add both `touch-action` and `-ms-touch-action`
 
