@@ -11,7 +11,6 @@
 ( function() {
 
 	// Detect support for necessary features;
-	var MO = window.MutationObserver || window.WebKitMutationObserver;
 	var touchevents = ( "ontouchstart" in window ) ||
 	                  ( window.DocumentTouch && document instanceof DocumentTouch );
 	var nativeTouchAction = document.documentElement.style[ "touch-action" ] !== undefined ||
@@ -28,12 +27,11 @@ window.Hammer = window.Hammer || {};
 var timeTouch = /(iP(ad|hone|od))/.test( navigator.userAgent ) && ( "indexedDB" in window || !!window.performance );
 
 window.Hammer.time = {
-
-	// Check if an element has touch action none in its style attribute and thusly should
-	// be hammered upon
 	getTouchAction: function( element ) {
 		var list = element.classList
-		return list.contains( this.className.none ) ? "none" : list.contains( this.className.manipulation ) ? "manipulation" : undefined;
+		return list.contains( this.className.none ) ?
+			"none" :
+			list.contains( this.className.manipulation ) ? "manipulation" : undefined;
 	},
 	shouldHammer: function( e ) {
 		var parentAction = e.target.hasParent;
@@ -103,7 +101,5 @@ window.Hammer.time = {
 		this.installStartEvents();
 	}
 };
-
 window.Hammer.time.install();
-
 } )();
