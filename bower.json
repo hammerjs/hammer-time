@@ -1,4 +1,5 @@
 {
   "name": "hammer-time",
+  "license": "MIT",
   "main": "hammer-time.js"
 }
