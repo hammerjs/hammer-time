@@ -1,5 +1,7 @@
 # Hammer Time!
 
+[![CDNJS](https://img.shields.io/cdnjs/v/hammer-time.svg)](https://cdnjs.com/libraries/hammer-time)
+
 ![Thors Hammer crashing down](http://33.media.tumblr.com/85d64e2f846797ab471480cff3f33d4b/tumblr_mzms7yMfum1s75u1lo2_500.gif)
 
 ## On your click times!
