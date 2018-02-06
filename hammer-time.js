@@ -18,9 +18,22 @@
 			                            document.documentElement.style[ "-ms-touch-action" ];
   // iOS running pages from the homescreen still have the delay
   var standalone = window.navigator.standalone;
+  var uiWebView = false;
+  if (navigator.platform.substr(0,2) === 'iP'){
+      //iOS (iPhone, iPod or iPad)
+      var lte9 = /constructor/i.test(window.HTMLElement);
+      var nav = window.navigator, ua = nav.userAgent, idb = !!window.indexedDB;
+      if (ua.indexOf('Safari') !== -1 && ua.indexOf('Version') !== -1 && !nav.standalone){
+          uiWebView = false;
+      } else if ((!idb && lte9) || !window.statusbar.visible) {
+          uiWebView = true;
+      } else if ((window.webkit && window.webkit.messageHandlers) || !lte9 || idb){
+          uiWebView = false;
+      }
+  }
 
 // If there is native touch action bail the hammer has already dropped
-if ( (nativeTouchAction && !standalone) || !touchevents || !MO ) {
+if ( (nativeTouchAction && !standalone && !uiWebView) || !touchevents || !MO ) {
 	return;
 }
 
